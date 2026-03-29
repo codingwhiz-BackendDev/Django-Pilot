@@ -1,35 +1,286 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Welcome to Django</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-        }
-        .container {
-            text-align: center;
-            padding: 2rem;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Welcome to Django!</h1>
-        <p>Your project has been successfully set up.</p>
-        <p>Let your friends know about this amazing python module .</p>
+{% load static %}
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Django Pilot — Build Django Apps in Seconds</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- ═══════════════════════ LANDING PAGE ═══════════════════════ -->
+    <div id="page-landing" class="page active">
+      <!-- NAV -->
+      <nav class="landing-nav" id="landing-nav">
+        <div class="nav-logo">
+          <span class="logo-mark">⬡</span>
+          <span class="logo-text">Django<span class="accent">Pilot</span></span>
+        </div>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#demo">Demo</a>
+          <a href="#">Docs</a>
+          <a href="#">GitHub</a>
+        </div>
+        <a href="chat" class="btn-nav-cta">Launch App →</a>
+      </nav>
+
+      <!-- HERO -->
+      <section class="hero" id="hero">
+        <div class="hero-bg">
+          <div class="orb orb-1"></div>
+          <div class="orb orb-2"></div>
+          <div class="orb orb-3"></div>
+          <canvas id="particles-canvas"></canvas>
+        </div>
+
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="badge-dot"></span>
+            Powered by Orion Labs
+          </div>
+          <h1 class="hero-headline">
+            Build Django Apps<br />
+            <span class="gradient-text">in Seconds</span>
+          </h1>
+          <p class="hero-sub">
+            Describe your idea. Django Pilot generates a complete,
+            production-ready Django project — models, views, URLs, templates,
+            and more.
+          </p>
+          <div class="hero-actions">
+            <a href="chat"  class="btn-primary">
+              <span>Start Building</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M3 8h10M9 4l4 4-4 4"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+            <button class="btn-ghost">Watch Demo</button>
+          </div>
+          <p class="hero-tagline">No config. No boilerplate. Just your idea.</p>
+        </div>
+
+        <!-- FLOATING CARDS -->
+        <div class="floating-cards">
+          <div class="fcard fcard-1">
+            <div class="fcard-icon">🧠</div>
+            <div class="fcard-text">
+              <strong>AI Generated</strong>
+              <span>blog/models.py</span>
+            </div>
+          </div>
+          <div class="fcard fcard-2">
+            <div class="fcard-dot green"></div>
+            <span>Project ready in 3s</span>
+          </div>
+          <div class="fcard fcard-3">
+            <div class="fcard-icon">⚡</div>
+            <div class="fcard-text">
+              <strong>Instant Preview</strong>
+              <span>Full code output</span>
+            </div>
+          </div>
+          <div class="fcard fcard-4 code-card">
+            <span class="code-line"><em>class</em> Post(models.Model):</span>
+            <span class="code-line indent"
+              >title = models.<em>CharField</em>(…)</span
+            >
+            <span class="code-line indent"
+              >body = models.<em>TextField</em>()</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURES -->
+      <section class="features" id="features">
+        <div class="section-label">Features</div>
+        <h2 class="section-title">
+          Everything you need, <span class="gradient-text">generated</span>
+        </h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feat-icon">🤖</div>
+            <h3>AI Project Generation</h3>
+            <p>
+              Describe your project in plain English. Get a complete Django
+              project structure instantly.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feat-icon">👁️</div>
+            <h3>Instant Code Preview</h3>
+            <p>
+              See your models, views, URLs, and templates live as they're
+              generated in real-time.
+            </p>
+          </div>
+          <div class="feature-card featured">
+            <div class="feat-icon">📦</div>
+            <h3>Export Project</h3>
+            <p>
+              Download your complete project as a ZIP, push to GitHub, or deploy
+              in one click.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feat-icon">🐙</div>
+            <h3>GitHub Integration</h3>
+            <p>
+              Push generated code directly to a new GitHub repo with a single
+              button press.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feat-icon">🛠️</div>
+            <h3>Developer-Friendly UI</h3>
+            <p>
+              Built for devs. Syntax highlighting, file explorer, and a clean
+              workspace layout.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feat-icon">⚡</div>
+            <h3>Smart Templates</h3>
+            <p>
+              Kickstart with pre-built templates for blogs, e-commerce, APIs,
+              dashboards, and more.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- DEMO SECTION -->
+      <section class="demo-section" id="demo">
+        <div class="section-label">Product Demo</div>
+        <h2 class="section-title">See it in action</h2>
+        <div class="demo-mockup">
+          <div class="mockup-bar">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+            <span class="mockup-url">djangopilot.app/workspace</span>
+          </div>
+          <div class="mockup-body">
+            <div class="mockup-sidebar">
+              <div class="ms-logo">⬡ Django<span>Pilot</span></div>
+              <div class="ms-item active">🏠 New Project</div>
+              <div class="ms-item">📁 My Projects</div>
+              <div class="ms-item">🧩 Templates</div>
+              <div class="ms-item">🐙 GitHub Export</div>
+              <div class="ms-item">⚙️ Settings</div>
+            </div>
+            <div class="mockup-chat">
+              <div class="mc-msg ai">
+                <div class="mc-bubble">
+                  Hello! Describe the Django project you want to build.
+                </div>
+              </div>
+              <div class="mc-msg user">
+                <div class="mc-bubble">
+                  Create a blog with auth, comments, and tags
+                </div>
+              </div>
+              <div class="mc-msg ai">
+                <div class="mc-bubble">
+                  <span class="typing-dots"
+                    ><span></span><span></span><span></span
+                  ></span>
+                </div>
+              </div>
+            </div>
+            <div class="mockup-preview">
+              <div class="mp-tabs">
+                <span class="mp-tab active">Models</span>
+                <span class="mp-tab">Views</span>
+                <span class="mp-tab">URLs</span>
+              </div>
+              <div class="mp-code">
+                <span class="kw">class</span>
+                <span class="cl">Post</span>(models.Model):<br />
+                &nbsp;&nbsp;title = models.<span class="fn">CharField</span
+                >(max_length=<span class="nm">200</span>)<br />
+                &nbsp;&nbsp;body = models.<span class="fn">TextField</span
+                >()<br />
+                &nbsp;&nbsp;author = models.<span class="fn">ForeignKey</span
+                >(User, ...)<br />
+                &nbsp;&nbsp;tags = models.<span class="fn">ManyToManyField</span
+                >(Tag)<br />
+                &nbsp;&nbsp;created_at = models.<span class="fn"
+                  >DateTimeField</span
+                >(<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;auto_now_add=<span class="kw">True</span
+                >)<br /><br />
+                <span class="kw">class</span>
+                <span class="cl">Comment</span>(models.Model):<br />
+                &nbsp;&nbsp;post = models.<span class="fn">ForeignKey</span
+                >(Post, ...)<br />
+                &nbsp;&nbsp;text = models.<span class="fn">TextField</span>()
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="chat"  class="btn-primary large">
+          Try it yourself →
+        </a>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="landing-footer">
+        <div class="footer-inner">
+          <div class="footer-brand">
+            <div class="nav-logo">
+              <span class="logo-mark">⬡</span>
+              <span class="logo-text"
+                >Django<span class="accent">Pilot</span></span
+              >
+            </div>
+            <p>Build Django apps from ideas. Powered by Orion Labs.</p>
+          </div>
+          <div class="footer-links">
+            <div class="fl-col">
+              <strong>Product</strong>
+              <a href="#">Features</a>
+              <a href="#">Templates</a>
+              <a href="#">Pricing</a>
+            </div>
+            <div class="fl-col">
+              <strong>Developers</strong>
+              <a href="#">Documentation</a>
+              <a href="#">GitHub</a>
+              <a href="#">API</a>
+            </div>
+            <div class="fl-col">
+              <strong>Company</strong>
+              <a href="#">About</a>
+              <a href="#">Blog</a>
+              <a href="#">Contact</a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2025 Orion Labs. All rights reserved.</span>
+          <span class="footer-powered"
+            >Powered by <strong>Orion Labs</strong> ⬡</span
+          >
+        </div>
+      </footer>
     </div>
-</body>
+
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast" id="toast"></div>
+
+    <script src="{% static 'js/index.js' %}"></script>
+  </body>
 </html>

@@ -1,0 +1,238 @@
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet" />
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- ═══════════════════════ APP DASHBOARD ═══════════════════════ -->
+    <div id="page-app" class="page">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo" >
+                <span class="logo-mark">⬡</span>
+                <span class="logo-text">Django<span class="accent">Pilot</span></span>
+            </div>
+
+            <button class="sidebar-new-btn" onclick="newProject()">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                </svg>
+                New Project
+            </button>
+
+            <nav class="sidebar-nav">
+                <div class="snav-label">Workspace</div>
+                <a class="snav-item active" data-page="workspace" onclick="switchNav(this)">
+                    <span>🏠</span> My Projects
+                </a>
+                <a class="snav-item" data-page="templates" onclick="switchNav(this)">
+                    <span>🧩</span> Templates
+                </a>
+                <a class="snav-item" data-page="export" onclick="switchNav(this)">
+                    <span>🐙</span> GitHub Export
+                </a>
+                <div class="snav-label">Account</div>
+                <a class="snav-item" data-page="settings" onclick="switchNav(this)">
+                    <span>⚙️</span> Settings
+                </a>
+            </nav>
+
+            <div class="sidebar-projects">
+                <div class="snav-label">Recent</div>
+                <div class="project-item" onclick="loadProject('blog')">
+                    📝 Blog App
+                </div>
+                <div class="project-item" onclick="loadProject('ecommerce')">
+                    🛒 E-Commerce
+                </div>
+                <div class="project-item" onclick="loadProject('api')">
+                    🔌 REST API
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="sf-orion">Powered by Orion Labs ⬡</div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="app-main">
+            <!-- TOP NAV -->
+            <header class="app-topbar">
+                <div class="topbar-left">
+                    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+                    <div class="project-status" id="project-status">
+                        <span class="status-dot idle"></span>
+                        <span id="status-text">Ready</span>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <button class="btn-generate" id="generate-btn" onclick="triggerGenerate()">
+                        <span>⚡ Generate</span>
+                    </button>
+                    <button class="btn-icon" onclick="toggleDarkMode()" title="Toggle theme" id="theme-toggle">
+                        🌙
+                    </button>
+                    <div class="user-avatar">O</div>
+                </div>
+            </header>
+
+            <!-- WORKSPACE -->
+            <div class="workspace" id="workspace">
+                <!-- LEFT: CHAT PANEL -->
+                <div class="chat-panel" id="chat-panel">
+                    <div class="panel-header">
+                        <span>💬 Idea Input</span>
+                        <button class="panel-action" onclick="clearChat()">Clear</button>
+                    </div>
+
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="chat-bubble ai">
+                            <div class="bubble-avatar">⬡</div>
+                            <div class="bubble-body">
+                                <p>
+                                    Hey! I'm Django Pilot. Describe the Django project you want
+                                    to build and I'll generate the full code instantly.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="prompt-suggestions" id="prompt-suggestions">
+                            <div class="ps-label">Try an example:</div>
+                            <button class="ps-btn" onclick="usePrompt(this)">
+                                Blog with auth & comments
+                            </button>
+                            <button class="ps-btn" onclick="usePrompt(this)">
+                                E-commerce store with cart
+                            </button>
+                            <button class="ps-btn" onclick="usePrompt(this)">
+                                REST API with JWT auth
+                            </button>
+                            <button class="ps-btn" onclick="usePrompt(this)">
+                                Task management app
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-area">
+                        <textarea id="chat-input" class="chat-textarea" placeholder="Describe your Django project idea…"
+                            rows="3" onkeydown="handleInputKey(event)"></textarea>
+                        <div class="chat-input-actions">
+                            <span class="input-hint">Enter ↵ to send</span>
+                            <button class="btn-send" onclick="sendMessage()">
+                                Send
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                    <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RESIZE HANDLE -->
+                <div class="resize-handle" id="resize-handle"></div>
+
+                <!-- RIGHT: PREVIEW PANEL -->
+                <div class="preview-panel" id="preview-panel">
+                    <div class="panel-header">
+                        <span>📁 Generated Output</span>
+                        <div class="panel-actions-right">
+                            <button class="panel-action" onclick="copyCode()">Copy</button>
+                            <button class="panel-action" onclick="showExport()">
+                                Export
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="preview-layout">
+                        <!-- FILE TREE -->
+                        <div class="file-tree" id="file-tree">
+                            <div class="ft-header">Project Files</div>
+                            <div class="ft-empty" id="ft-empty">
+                                <span>No project generated yet</span>
+                            </div>
+                            <div class="ft-tree" id="ft-tree" style="display: none"></div>
+                        </div>
+
+                        <!-- CODE VIEW -->
+                        <div class="code-view">
+                            <div class="code-tabs" id="code-tabs">
+                                <button class="ctab active" data-tab="structure" onclick="switchTab(this)">
+                                    Structure
+                                </button>
+                                <button class="ctab" data-tab="models" onclick="switchTab(this)">
+                                    Models
+                                </button>
+                                <button class="ctab" data-tab="views" onclick="switchTab(this)">
+                                    Views
+                                </button>
+                                <button class="ctab" data-tab="urls" onclick="switchTab(this)">
+                                    URLs
+                                </button>
+                                <button class="ctab" data-tab="templates" onclick="switchTab(this)">
+                                    Templates
+                                </button>
+                                <button class="ctab" data-tab="fullcode" onclick="switchTab(this)">
+                                    Full Code
+                                </button>
+                            </div>
+
+                            <div class="code-body" id="code-body">
+                                <div class="code-placeholder" id="code-placeholder">
+                                    <div class="cp-icon">⬡</div>
+                                    <p>Your generated code will appear here.</p>
+                                    <p class="cp-sub">Type a project idea and hit Generate.</p>
+                                </div>
+                                <div class="loading-state" id="loading-state" style="display: none">
+                                    <div class="loading-bars">
+                                        <div class="lb"></div>
+                                        <div class="lb"></div>
+                                        <div class="lb"></div>
+                                        <div class="lb"></div>
+                                        <div class="lb"></div>
+                                    </div>
+                                    <p class="loading-label" id="loading-label">
+                                        Generating your project…
+                                    </p>
+                                </div>
+                                <pre class="code-display" id="code-display"
+                                    style="display: none"><code id="code-content"></code></pre>
+                            </div>
+
+                            <!-- EXPORT BAR -->
+                            <div class="export-bar" id="export-bar" style="display: none">
+                                <button class="export-btn" onclick="exportAction('zip')">
+                                    📦 Download ZIP
+                                </button>
+                                <button class="export-btn" onclick="exportAction('github')">
+                                    🐙 Push to GitHub
+                                </button>
+                                <button class="export-btn" onclick="exportAction('deploy')">
+                                    🚀 Deploy Project
+                                </button>
+                                <button class="export-btn" onclick="exportAction('save')">
+                                    💾 Save Project
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast" id="toast"></div>
+
+    <script src="{% static 'js/index.js' %}"></script>
+</body>
+
+</html>
