@@ -115,3 +115,17 @@ window.addEventListener('scroll', () => {
             : 'rgba(8, 12, 20, 0.7)';
     }
 });
+
+
+// ── Messages animation ─────────────────────
+document.querySelectorAll('.dp-msg').forEach(el => {
+    const duration = parseInt(el.style.getPropertyValue('--msg-duration')) || 5000;
+
+    const dismiss = () => {
+        el.classList.add('leaving');
+        el.addEventListener('animationend', () => el.remove(), { once: true });
+    };
+
+    el.querySelector('.msg-close').addEventListener('click', dismiss);
+    setTimeout(dismiss, duration);
+});
