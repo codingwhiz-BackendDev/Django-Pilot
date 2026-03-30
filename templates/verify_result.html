@@ -1,0 +1,114 @@
+{% load static %}
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ heading }} — DjangoPilot</title>
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+
+    <div class="auth-bg">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <canvas id="particles-canvas"></canvas>
+    </div>
+
+    <nav class="auth-nav">
+      <a href="/" class="nav-logo">
+        <span class="logo-mark">⬡</span>
+        <span class="logo-text">Django<span class="accent">Pilot</span></span>
+      </a>
+    </nav>
+
+    <main class="auth-page verify-page">
+      <div class="verify-card" id="verify-card">
+
+        <!-- Dynamic icon based on status -->
+        <div class="verify-icon-wrap status-{{ status }}">
+          <div class="verify-icon-ring ring-3"></div>
+          <div class="verify-icon-ring ring-2"></div>
+          <div class="verify-icon-ring ring-1"></div>
+          <div class="verify-icon">
+
+            {% if status == 'success' %}
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="24" r="18" stroke="currentColor" stroke-width="2"/>
+              <path d="M15 24l6 6 12-12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                    stroke-dasharray="30" stroke-dashoffset="30">
+                <animate attributeName="stroke-dashoffset" from="30" to="0" dur="0.5s" begin="0.3s" fill="freeze"/>
+              </path>
+            </svg>
+
+            {% elif status == 'expired' %}
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="24" r="18" stroke="currentColor" stroke-width="2"/>
+              <path d="M24 16v9l5 3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+
+            {% elif status == 'already' %}
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="24" r="18" stroke="currentColor" stroke-width="2"/>
+              <path d="M15 24l6 6 12-12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+
+            {% else %}
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="24" r="18" stroke="currentColor" stroke-width="2"/>
+              <path d="M24 16v10M24 30v2" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            {% endif %}
+
+          </div>
+        </div>
+
+        <!-- Status badge -->
+        <div class="verify-badge badge-{{ status }}">
+          <span class="badge-dot"></span>
+          {% if status == 'success' %}Verification complete
+          {% elif status == 'expired' %}Link expired
+          {% elif status == 'already' %}Already active
+          {% else %}Something went wrong{% endif %}
+        </div>
+
+        <h1 class="verify-title">{{ heading }}</h1>
+        <p class="verify-sub">{{ message }}</p>
+
+        <!-- Action buttons per status -->
+        <div class="verify-actions">
+          {% if status == 'success' or status == 'already' %}
+            <a href="{% url 'login' %}" class="btn-auth" style="display:inline-flex; width:auto; padding: 14px 32px;">
+              Sign in to DjangoPilot
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-left:8px">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+
+          {% elif status == 'expired' and email %}
+            <form method="POST" action="{% url 'resend_verification' %}" style="display:inline">
+              {% csrf_token %}
+              <input type="hidden" name="email" value="{{ email }}">
+              <button type="submit" class="btn-auth" style="display:inline-flex; width:auto; padding: 14px 32px;">
+                Resend verification email
+              </button>
+            </form>
+            <a href="{% url 'login' %}" class="verify-back" style="margin-top:16px; display:block">← Back to sign in</a>
+
+          {% else %}
+            <a href="{% url 'register' %}" class="btn-auth" style="display:inline-flex; width:auto; padding: 14px 32px;">
+              Register again
+            </a>
+            <a href="{% url 'login' %}" class="verify-back" style="margin-top:16px; display:block">← Back to sign in</a>
+          {% endif %}
+        </div>
+
+      </div>
+    </main>
+
+    <script src="{% static 'js/auth.js' %}"></script>
+  </body>
+</html>

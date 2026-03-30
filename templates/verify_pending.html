@@ -1,0 +1,122 @@
+{% load static %}
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Check your email — DjangoPilot</title>
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+
+    <div class="auth-bg">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <canvas id="particles-canvas"></canvas>
+    </div>
+
+    <nav class="auth-nav">
+      <a href="/" class="nav-logo">
+        <span class="logo-mark">⬡</span>
+        <span class="logo-text">Django<span class="accent">Pilot</span></span>
+      </a>
+    </nav>
+
+    {% if messages %}
+    <div class="dp-messages" id="dp-messages">
+      {% for message in messages %}
+      <div class="dp-msg {{ message.tags }}" style="--msg-duration:5000ms">
+        <div class="msg-icon">
+          {% if message.tags == 'success' %}<svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          {% elif message.tags == 'error' %}<svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          {% else %}<svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>{% endif %}
+        </div>
+        <div class="msg-body">
+          <div class="msg-tag">{{ message.tags }}</div>
+          <div class="msg-text">{{ message }}</div>
+        </div>
+        <button class="msg-close" aria-label="Dismiss"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="auth-page verify-page">
+      <div class="verify-card" id="verify-card">
+
+        <!-- Animated envelope icon -->
+        <div class="verify-icon-wrap">
+          <div class="verify-icon-ring ring-3"></div>
+          <div class="verify-icon-ring ring-2"></div>
+          <div class="verify-icon-ring ring-1"></div>
+          <div class="verify-icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="10" width="40" height="28" rx="4" stroke="currentColor" stroke-width="2"/>
+              <path d="M4 14l20 13 20-13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <!-- flying dots -->
+              <circle class="mail-dot d1" cx="38" cy="10" r="2.5" fill="currentColor"/>
+              <circle class="mail-dot d2" cx="43" cy="6"  r="1.8" fill="currentColor"/>
+              <circle class="mail-dot d3" cx="45" cy="12" r="1.2" fill="currentColor"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="verify-badge">
+          <span class="badge-dot"></span>
+          Verification email sent
+        </div>
+
+        <h1 class="verify-title">Check your inbox</h1>
+
+        <p class="verify-sub">
+          We sent a verification link to
+          <span class="verify-email">{{ email }}</span><br>
+          Click it to activate your account.
+        </p>
+
+        <!-- Step indicators -->
+        <div class="verify-steps">
+          <div class="vstep done">
+            <div class="vstep-dot"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span>Account created</span>
+          </div>
+          <div class="vstep-line"></div>
+          <div class="vstep active">
+            <div class="vstep-dot pulse-dot"></div>
+            <span>Verify email</span>
+          </div>
+          <div class="vstep-line"></div>
+          <div class="vstep">
+            <div class="vstep-dot"></div>
+            <span>Start building</span>
+          </div>
+        </div>
+
+        <!-- Resend form -->
+        <div class="verify-resend">
+          <p class="resend-text">
+            {% if resent %}
+              ✓ A fresh link has been sent!
+            {% else %}
+              Didn't get it? Check your spam folder, or&nbsp;
+            {% endif %}
+          </p>
+          {% if not resent %}
+          <form method="POST" action="{% url 'resend_verification' %}">
+            {% csrf_token %}
+            <input type="hidden" name="email" value="{{ email }}">
+            <button type="submit" class="btn-resend">Resend email</button>
+          </form>
+          {% endif %}
+        </div>
+
+        <a href="{% url 'login' %}" class="verify-back">← Back to sign in</a>
+      </div>
+    </main>
+
+    <script src="{% static 'js/auth.js' %}"></script>
+  </body>
+</html>
