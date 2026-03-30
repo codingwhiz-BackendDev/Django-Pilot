@@ -1,0 +1,109 @@
+{% load static %}
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reset Link Sent — DjangoPilot</title>
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/verify_additions.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+
+    <div class="auth-bg">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <canvas id="particles-canvas"></canvas>
+    </div>
+
+    <nav class="auth-nav">
+      <a href="/" class="nav-logo">
+        <span class="logo-mark">⬡</span>
+        <span class="logo-text">Django<span class="accent">Pilot</span></span>
+      </a>
+    </nav>
+
+    <main class="auth-page verify-page">
+      <div class="verify-card">
+
+        <!-- Animated envelope icon (reuses verify_additions styles) -->
+        <div class="verify-icon-wrap">
+          <div class="verify-icon-ring ring-3"></div>
+          <div class="verify-icon-ring ring-2"></div>
+          <div class="verify-icon-ring ring-1"></div>
+          <div class="verify-icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="10" width="40" height="28" rx="4" stroke="currentColor" stroke-width="2"/>
+              <path d="M4 14l20 13 20-13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle class="mail-dot d1" cx="38" cy="10" r="2.5" fill="currentColor"/>
+              <circle class="mail-dot d2" cx="43" cy="6"  r="1.8" fill="currentColor"/>
+              <circle class="mail-dot d3" cx="45" cy="12" r="1.2" fill="currentColor"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="verify-badge">
+          <span class="badge-dot"></span>
+          Reset link sent
+        </div>
+
+        <h1 class="verify-title">Check your inbox</h1>
+
+        <p class="verify-sub">
+          We sent a password reset link to<br>
+          <span class="verify-email">{{ email }}</span>
+        </p>
+
+        <!-- Step indicators -->
+        <div class="verify-steps">
+          <div class="vstep done">
+            <div class="vstep-dot">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span>Email sent</span>
+          </div>
+          <div class="vstep-line"></div>
+          <div class="vstep active">
+            <div class="vstep-dot pulse-dot"></div>
+            <span>Click reset link</span>
+          </div>
+          <div class="vstep-line"></div>
+          <div class="vstep">
+            <div class="vstep-dot"></div>
+            <span>New password</span>
+          </div>
+        </div>
+
+        <!-- Info box -->
+        <div class="reset-info-box">
+          <div class="rib-row">
+            <span class="rib-icon">⏱️</span>
+            <span>Link expires in <strong>24 hours</strong></span>
+          </div>
+          <div class="rib-row">
+            <span class="rib-icon">📁</span>
+            <span>Can't find it? Check your <strong>spam folder</strong></span>
+          </div>
+        </div>
+
+        <!-- Resend form -->
+        <div class="verify-resend">
+          <p class="resend-text">Didn't receive it?&nbsp;</p>
+          <form method="POST" action="{% url 'forgot_password' %}">
+            {% csrf_token %}
+            <input type="hidden" name="email" value="{{ email }}">
+            <button type="submit" class="btn-resend">Resend email</button>
+          </form>
+        </div>
+
+        <a href="{% url 'login' %}" class="verify-back">← Back to sign in</a>
+
+      </div>
+    </main>
+
+    <script src="{% static 'js/auth.js' %}"></script>
+  </body>
+</html>

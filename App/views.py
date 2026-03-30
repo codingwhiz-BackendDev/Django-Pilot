@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import get_user_model
-from django.contrib.auth import login as auth_login
+from django.contrib.auth import get_user_model, login as auth_login 
+from django.contrib.auth.models import auth
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -10,7 +10,7 @@ from django.core.mail import send_mail, BadHeaderError
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django_ratelimit.decorators import ratelimit
-from .tokens import email_verification_token
+from .tokens import email_verification_token, password_reset_token
 from django.utils import timezone
 from django.utils import timezone
 
@@ -103,8 +103,7 @@ def register(request):
             messages.error(request, "Invalid email header.")
             return render(request, 'register.html')
 
-        except Exception:
-            # THIS FIXES YOUR PROBLEM
+        except Exception: 
             user.delete()
             messages.error(request, "Email address does not exist or could not receive mail.")
             return render(request, 'register.html')
@@ -223,6 +222,80 @@ def resend_verification(request):
         return render(request, 'verify_pending.html', {'email': email})
 
     return render(request, 'verify_pending.html', {'email': email, 'resent': True})
+
+def logout(request):
+    auth.logout(request)
+    return redirect('login')
+
+def forgot_password(request):
+    if request.method == "POST":
+        email = request.POST.get("email", "").strip().lower()
+
+        if not email:
+            messages.error(request, "Please enter your email.")
+            return render(request, "forgot_password.html")
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            messages.error(request, "No account found with that email.")
+            return render(request, "forgot_password.html")
+
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = password_reset_token.make_token(user)
+        domain = get_current_site(request).domain
+
+        reset_link = f"http://{domain}/reset-password/{uid}/{token}/"
+
+        send_mail(
+            "Reset your DjangoPilot password",
+            f"Click the link below to reset your password:\n\n{reset_link}",
+            "noreply@djangopilot.com",
+            [email],
+            fail_silently=False,
+        )
+
+        return render(request, "reset_email_sent.html", {"email": email})
+
+    return render(request, "forgot_password.html")
+
+def reset_password(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except Exception:
+        return render(request, "reset_result.html", {
+            "status": "invalid",
+            "message": "Invalid reset link."
+        })
+
+    if not password_reset_token.check_token(user, token):
+        return render(request, "reset_result.html", {
+            "status": "expired",
+            "message": "Reset link expired."
+        })
+
+    if request.method == "POST":
+        password = request.POST.get("password", "").strip()
+        confirm = request.POST.get("confirm_password", "").strip()
+
+        if len(password) < 8:
+            messages.error(request, "Password must be at least 8 characters.")
+            return render(request, "reset_password.html")
+
+        if password != confirm:
+            messages.error(request, "Passwords do not match.")
+            return render(request, "reset_password.html")
+
+        user.password = make_password(password)
+        user.save()
+
+        return render(request, "reset_result.html", {
+            "status": "success",
+            "message": "Your password has been reset successfully."
+        })
+
+    return render(request, "reset_password.html")
 
 
 def index(request):

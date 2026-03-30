@@ -1276,3 +1276,244 @@ a {
 .verify-back:hover {
     color: var(--accent);
 }
+
+
+
+
+/* ══════════════════════════════════════════════════
+   PASSWORD RESET PAGES — append to verify_additions.css
+   Covers: forgot_password.html, reset_email_sent.html,
+           reset_password.html, reset_result.html
+══════════════════════════════════════════════════ */
+
+/* ── Forgot password: single-column-ish layout ── */
+.fp-layout {
+    grid-template-columns: 1fr 1fr;
+}
+
+/* ── Floating lock icon on form pages ─────────── */
+.fp-icon-wrap {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 20px;
+    color: var(--accent);
+}
+
+.fp-icon-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    opacity: 0;
+    animation: ringPulse 2.8s ease-out infinite;
+}
+
+.fp-ring-1 {
+    animation-delay: 0s;
+}
+
+.fp-ring-2 {
+    animation-delay: 0.7s;
+}
+
+.fp-icon {
+    position: absolute;
+    inset: 8px;
+    background: rgba(79, 142, 255, 0.08);
+    border: 1px solid rgba(79, 142, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fp-icon svg {
+    width: 28px;
+    height: 28px;
+    stroke: var(--accent);
+}
+
+/* ── Reset info box (reset_email_sent) ────────── */
+.reset-info-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.rib-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-2);
+    text-align: left;
+}
+
+.rib-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.rib-row strong {
+    color: var(--text);
+}
+
+/* ── Password requirements checklist ─────────── */
+.pw-requirements {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 4px;
+}
+
+.pw-req {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--text-3);
+    transition: color 200ms ease;
+}
+
+.pw-req.met {
+    color: var(--green);
+}
+
+.req-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    flex-shrink: 0;
+    transition: background 200ms ease, border-color 200ms ease;
+}
+
+.pw-req.met .req-dot {
+    background: var(--green);
+    border-color: var(--green);
+}
+
+/* ── Success sparks (reset_result success) ────── */
+.success-sparks {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.spark {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: sparkBurst 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.s1 {
+    background: var(--green);
+    top: 40%;
+    left: 45%;
+    animation-delay: 0.1s;
+}
+
+.s2 {
+    background: var(--accent);
+    top: 35%;
+    left: 55%;
+    animation-delay: 0.2s;
+}
+
+.s3 {
+    background: var(--neon);
+    top: 45%;
+    left: 50%;
+    animation-delay: 0.15s;
+}
+
+.s4 {
+    background: var(--yellow);
+    top: 38%;
+    left: 42%;
+    animation-delay: 0.25s;
+}
+
+.s5 {
+    background: var(--accent-2);
+    top: 42%;
+    left: 58%;
+    animation-delay: 0.05s;
+}
+
+.s6 {
+    background: var(--green);
+    top: 36%;
+    left: 48%;
+    animation-delay: 0.3s;
+}
+
+@keyframes sparkBurst {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(var(--tx, 30px), var(--ty, -50px)) scale(0);
+        opacity: 0;
+    }
+}
+
+.s1 {
+    --tx: -40px;
+    --ty: -60px;
+}
+
+.s2 {
+    --tx: 50px;
+    --ty: -40px;
+}
+
+.s3 {
+    --tx: 10px;
+    --ty: -70px;
+}
+
+.s4 {
+    --tx: -60px;
+    --ty: -30px;
+}
+
+.s5 {
+    --tx: 70px;
+    --ty: -55px;
+}
+
+.s6 {
+    --tx: -20px;
+    --ty: -80px;
+}
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 900px) {
+    .fp-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .pw-requirements {
+        grid-template-columns: 1fr;
+    }
+}
