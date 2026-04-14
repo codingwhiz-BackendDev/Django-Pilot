@@ -11,5 +11,11 @@ urlpatterns = [
     path("forgot-password/", views.forgot_password, name="forgot_password"),
     path("reset-password/<uidb64>/<token>/", views.reset_password, name="reset_password"),
     path('dashboard', views.dashboard, name='dashboard'),
+    
+    
+    # Main generation endpoint — SSE stream
+    path("generate/", views.generate_project, name="generate"),
+    # Quick cache-check before opening a stream
+    path("check-cache/", views.check_cache, name="check_cache"),
 ]
 

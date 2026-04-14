@@ -1,330 +1,246 @@
 {% load static %}
+{% load socialaccount %}
 <!doctype html>
 <html lang="en" data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login — DjangoPilot</title>
-    <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — DjangoPilot</title>
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
   <link rel="stylesheet" href="{% static 'css/messages.css' %}" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <!-- Background orbs -->
-    <div class="auth-bg">
-      <div class="orb orb-1"></div>
-      <div class="orb orb-2"></div>
-      <div class="orb orb-3"></div>
-      <canvas id="particles-canvas"></canvas>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <!-- Background orbs -->
+  <div class="auth-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <canvas id="particles-canvas"></canvas>
+  </div>
+
+  <!-- Nav -->
+  <nav class="auth-nav">
+    <a href="/" class="nav-logo">
+      <span class="logo-mark">⬡</span>
+      <span class="logo-text">Django<span class="accent">Pilot</span></span>
+    </a>
+    <a href="register" class="btn-nav-cta">Register →</a>
+  </nav>
+
+  <!-- Auth container -->
+  <main class="auth-page">
+    {% if messages %}
+    <div class="dp-messages" id="dp-messages">
+      {% for message in messages %}
+      <div class="dp-msg {{ message.tags }}" style="--msg-duration: 5000ms">
+        <div class="msg-icon">
+          {% if message.tags == 'success' %}
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+          {% elif message.tags == 'error' %}
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+          {% elif message.tags == 'warning' %}
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+            <path d="M12 9v4m0 4h.01" />
+          </svg>
+          {% else %}
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 16v-4m0-4h.01" />
+          </svg>
+          {% endif %}
+        </div>
+        <div class="msg-body">
+          <div class="msg-tag">{{ message.tags }}</div>
+          <div class="msg-text">{{ message }}</div>
+        </div>
+        <button class="msg-close" aria-label="Dismiss">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      {% endfor %}
     </div>
+    {% endif %}
 
-    <!-- Nav -->
-    <nav class="auth-nav">
-      <a href="/" class="nav-logo">
-        <span class="logo-mark">⬡</span>
-        <span class="logo-text">Django<span class="accent">Pilot</span></span>
-      </a>
-      <a href="register" class="btn-nav-cta">Register →</a>
-    </nav>
-
-    <!-- Auth container -->
-    <main class="auth-page">
-      {% if messages %}
-      <div class="dp-messages" id="dp-messages">
-        {% for message in messages %}
-        <div class="dp-msg {{ message.tags }}" style="--msg-duration: 5000ms">
-          <div class="msg-icon">
-            {% if message.tags == 'success' %}
-            <svg
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M20 6 9 17l-5-5" />
-            </svg>
-            {% elif message.tags == 'error' %}
-            <svg
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M18 6 6 18M6 6l12 12" />
-            </svg>
-            {% elif message.tags == 'warning' %}
-            <svg
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-              />
-              <path d="M12 9v4m0 4h.01" />
-            </svg>
-            {% else %}
-            <svg
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 16v-4m0-4h.01" />
-            </svg>
-            {% endif %}
+    <div class="auth-split">
+      <!-- LEFT — branding panel -->
+      <div class="auth-panel">
+        <div class="panel-content">
+          <div class="panel-badge">
+            <span class="badge-dot"></span>
+            AI-Powered Builder
           </div>
-          <div class="msg-body">
-            <div class="msg-tag">{{ message.tags }}</div>
-            <div class="msg-text">{{ message }}</div>
-          </div>
-          <button class="msg-close" aria-label="Dismiss">
-            <svg
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.8"
-              stroke="currentColor"
-              stroke-linecap="round"
-            >
-              <path d="M18 6 6 18M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-        {% endfor %}
-      </div>
-      {% endif %}
+          <h2 class="panel-headline">
+            Build Django<br /><span class="gradient-text">faster than ever</span>
+          </h2>
+          <p class="panel-sub">
+            Sign in to access your workspace and continue building
+            production-ready Django projects from plain English.
+          </p>
 
-      <div class="auth-split">
-        <!-- LEFT — branding panel -->
-        <div class="auth-panel">
-          <div class="panel-content">
-            <div class="panel-badge">
-              <span class="badge-dot"></span>
-              AI-Powered Builder
+          <!-- Floating code snippet -->
+          <div class="panel-code-card">
+            <div class="pcc-header">
+              <div class="pcc-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <span class="pcc-file">blog/models.py</span>
             </div>
-            <h2 class="panel-headline">
-              Build Django<br /><span class="gradient-text"
-                >faster than ever</span
-              >
-            </h2>
-            <p class="panel-sub">
-              Sign in to access your workspace and continue building
-              production-ready Django projects from plain English.
-            </p>
-
-            <!-- Floating code snippet -->
-            <div class="panel-code-card">
-              <div class="pcc-header">
-                <div class="pcc-dots">
-                  <span class="dot red"></span>
-                  <span class="dot yellow"></span>
-                  <span class="dot green"></span>
-                </div>
-                <span class="pcc-file">blog/models.py</span>
-              </div>
-              <div class="pcc-body">
-                <span class="kw">class</span>
-                <span class="cl">Post</span>(models.Model):<br />
-                &nbsp;&nbsp;title = models.<span class="fn">CharField</span
-                >(<span class="nm">max_length</span>=200)<br />
-                &nbsp;&nbsp;body = models.<span class="fn">TextField</span
-                >()<br />
-                &nbsp;&nbsp;author = models.<span class="fn">ForeignKey</span
-                >(User, ...)<br />
-                &nbsp;&nbsp;created_at = models.<span class="fn"
-                  >DateTimeField</span
-                >(<br />
-                &nbsp;&nbsp;&nbsp;&nbsp;<span class="nm">auto_now_add</span
-                >=<span class="kw">True</span>)
-              </div>
-            </div>
-
-            <!-- Stats row -->
-            <div class="panel-stats">
-              <div class="pstat">
-                <strong>3s</strong>
-                <span>Avg. project generation</span>
-              </div>
-              <div class="pstat-divider"></div>
-              <div class="pstat">
-                <strong>100%</strong>
-                <span>Production-ready code</span>
-              </div>
-              <div class="pstat-divider"></div>
-              <div class="pstat">
-                <strong>∞</strong>
-                <span>Projects possible</span>
-              </div>
+            <div class="pcc-body">
+              <span class="kw">class</span>
+              <span class="cl">Post</span>(models.Model):<br />
+              &nbsp;&nbsp;title = models.<span class="fn">CharField</span>(<span class="nm">max_length</span>=200)<br />
+              &nbsp;&nbsp;body = models.<span class="fn">TextField</span>()<br />
+              &nbsp;&nbsp;author = models.<span class="fn">ForeignKey</span>(User, ...)<br />
+              &nbsp;&nbsp;created_at = models.<span class="fn">DateTimeField</span>(<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="nm">auto_now_add</span>=<span class="kw">True</span>)
             </div>
           </div>
-        </div>
 
-        <!-- RIGHT — form panel -->
-        <div class="auth-form-panel">
-          <div class="auth-card">
-            <div class="auth-card-header">
-              <div class="auth-icon">⬡</div>
-              <h1 class="auth-title">Welcome back</h1>
-              <p class="auth-subtitle">Sign in to your DjangoPilot account</p>
+          <!-- Stats row -->
+          <div class="panel-stats">
+            <div class="pstat">
+              <strong>3s</strong>
+              <span>Avg. project generation</span>
             </div>
-
-            <form class="auth-form" method="POST" action="/login">
-              {% csrf_token %}
-
-              <div class="form-group">
-                <label class="form-label" for="email">Email address</label>
-                <div class="input-wrapper">
-                  <span class="input-icon">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <rect x="2" y="4" width="20" height="16" rx="2" />
-                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                    </svg>
-                  </span>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    class="form-input"
-                    placeholder="you@example.com"
-                    autocomplete="email"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div class="form-group">
-                <div class="label-row">
-                  <label class="form-label" for="password">Password</label>
-                  <a href="/forgot-password" class="form-link"
-                    >Forgot password?</a
-                  >
-                </div>
-                <div class="input-wrapper">
-                  <span class="input-icon">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <rect x="3" y="11" width="18" height="11" rx="2" />
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
-                  </span>
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    class="form-input"
-                    placeholder="••••••••"
-                    autocomplete="current-password"
-                    required
-                  />
-                  <button
-                    type="button"
-                    class="input-toggle"
-                    id="toggle-pw"
-                    aria-label="Toggle password visibility"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  id="remember"
-                  name="remember"
-                  class="check-input"
-                />
-                <label for="remember" class="check-label"
-                  >Remember me for 30 days</label
-                >
-              </div>
-
-              <button type="submit" class="btn-auth">
-                <span>Sign In</span>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path
-                    d="M3 8h10M9 4l4 4-4 4"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-
-              <div class="auth-divider"><span>or continue with</span></div>
-
-              <button type="button" class="btn-oauth">
-                <svg width="18" height="18" viewBox="0 0 24 24">
-                  <path
-                    fill="#4285F4"
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                  />
-                  <path
-                    fill="#34A853"
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                  />
-                  <path
-                    fill="#FBBC05"
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                  />
-                  <path
-                    fill="#EA4335"
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                  />
-                </svg>
-                Continue with Google
-              </button>
-            </form>
-
-            <p class="auth-footer-text">
-              Don't have an account?
-              <a href="register" class="form-link strong">Create one free →</a>
-            </p>
+            <div class="pstat-divider"></div>
+            <div class="pstat">
+              <strong>100%</strong>
+              <span>Production-ready code</span>
+            </div>
+            <div class="pstat-divider"></div>
+            <div class="pstat">
+              <strong>∞</strong>
+              <span>Projects possible</span>
+            </div>
           </div>
         </div>
       </div>
-    </main>
 
-    <script src="{% static 'js/auth.js' %}"></script>
-  </body>
+      <!-- RIGHT — form panel -->
+      <div class="auth-form-panel">
+        <div class="auth-card">
+          <div class="auth-card-header">
+            <div class="auth-icon">⬡</div>
+            <h1 class="auth-title">Welcome back</h1>
+            <p class="auth-subtitle">Sign in to your DjangoPilot account</p>
+          </div>
+
+          <form class="auth-form" method="POST" action="/login">
+            {% csrf_token %}
+
+            <div class="form-group">
+              <label class="form-label" for="email">Email address</label>
+              <div class="input-wrapper">
+                <span class="input-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                  </svg>
+                </span>
+                <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com"
+                  autocomplete="email" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="label-row">
+                <label class="form-label" for="password">Password</label>
+                <a href="/forgot-password" class="form-link">Forgot password?</a>
+              </div>
+              <div class="input-wrapper">
+                <span class="input-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                </span>
+                <input type="password" id="password" name="password" class="form-input" placeholder="••••••••"
+                  autocomplete="current-password" required />
+                <button type="button" class="input-toggle" id="toggle-pw" aria-label="Toggle password visibility">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-check">
+              <input type="checkbox" id="remember" name="remember" class="check-input" />
+              <label for="remember" class="check-label">Remember me for 30 days</label>
+            </div>
+
+            <button type="submit" class="btn-auth">
+              <span>Sign In</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
+
+            <div class="auth-divider"><span>or continue with</span></div>
+
+            <a href="{% provider_login_url 'google' %}" class="btn-oauth">
+              <svg width="18" height="18" viewBox="0 0 24 24">
+                <path fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                <path fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                <path fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                <path fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+              </svg>
+              Continue with Google
+            </a>
+            <a href="{% provider_login_url 'github' %}" class="btn-oauth">
+              <svg width="18" height="18" viewBox="0 0 24 24">
+                <path fill="#24292e" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58
+                        0-.29-.01-1.05-.02-2.06-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76
+                        -1.09-.75.08-.74.08-.74 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49.99
+                        .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93
+                        0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18
+                        0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02 0 2.05.14 3 .4
+                        2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18
+                        .77.84 1.23 1.91 1.23 3.22
+                        0 4.61-2.8 5.63-5.48 5.93
+                        .43.37.81 1.1.81 2.22
+                        0 1.6-.02 2.89-.02 3.28
+                        0 .32.21.69.83.57A12.01 12.01 0 0024 12
+                        C24 5.37 18.63 0 12 0z" />
+              </svg>
+              Continue with GitHub
+            </a>
+          </form>
+
+          <p class="auth-footer-text">
+            Don't have an account?
+            <a href="register" class="form-link strong">Create one free →</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="{% static 'js/auth.js' %}"></script>
+</body>
+
 </html>
